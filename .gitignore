@@ -14,6 +14,7 @@ credentials.json
 
 # Images and receipt content
 receipts/
+results/
 *.jpg
 *.jpeg
 *.png
