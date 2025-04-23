@@ -1,0 +1,20 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+myenv/
+venv/
+
+# Environment and secrets
+.env
+token.json
+credentials.json
+
+# Images and receipt content
+receipts/
+*.jpg
+*.jpeg
+*.png
+*.json
