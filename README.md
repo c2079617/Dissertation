@@ -1,32 +1,46 @@
 # Dissertation
 # 🧾 AI-Powered Receipt Scanning Tool
 
-This project is a final-year Computer Science dissertation for Sheffield Hallam University. It is an AI-powered receipt scanning tool built in Python that automates expense tracking by extracting and structuring receipt data from images.
+This project is a final-year Computer Science dissertation at Sheffield Hallam University. It is an AI-powered receipt scanning tool that automates expense tracking by extracting and structuring receipt data from images stored in a synced Google Drive folder.
+
+---
 
 ## 📌 Project Summary
 
-The goal of this tool is to simplify the process of recording expenses by allowing users to simply take a photo of a receipt and send it via email. The system automatically processes the image, extracts important information such as the store name, items purchased, total amount, and stores this structured data in a database.
+The system watches a Google Drive folder for new receipt images. Once detected, each image is:
+1. Downloaded locally
+2. Preprocessed with OpenCV
+3. Scanned using Tesseract OCR
+4. Parsed and structured with GPT-4 into JSON format
+5. Stored in a database for user-friendly tracking and reporting
+
+---
 
 ## 🔧 Key Features
 
-- 📸 **Image Preprocessing** using OpenCV  
-- 🔍 **Text Extraction** with Tesseract OCR  
-- 🤖 **Structured Data Generation** using OpenAI’s GPT model  
-- 🧠 Converts raw receipt text into JSON format (store, items, prices, total)  
-- 💾 Data ready to be saved in a database or displayed on a dashboard  
-- 📨 Future expansion: Email-to-cloud upload & message queue processing
+- ✅ Sync with Google Drive folder
+- 📸 Image preprocessing (grayscale, thresholding)
+- 🔍 Text extraction via Tesseract OCR
+- 🤖 Structured data creation using OpenAI's GPT
+- 💾 Temporary local storage of images
+- Integration with a web dashboard or database
+
+---
 
 ## 🗂️ Project Structure
 
-receipt-scanner/
-├── main.py
-├── .env
-├── requirements.txt
-├── utils/
-│   ├── image_processor.py
-│   └── receipt_parser.py
-├── receipts/
+Dissertation/
+├── main.py                          # Entry point
+├── .env                             # Environment variables (API keys, etc.)
+├── credentials.json                 # Google API OAuth credentials (downloaded from Google)
+├── requirements.txt                 # Python dependencies
+├── receipts/                        # Folder to store temporarily downloaded receipt images
 │   └── sample.jpg
+├── utils/                           # Helper modules
+│   ├── image_processor.py          # OpenCV preprocessing
+│   ├── receipt_parser.py           # Tesseract OCR + GPT structuring
+│   └── gdrive_sync.py              # Google Drive sync and monitoring
+└── README.md
 
 ## 🚀 How It Works
 
@@ -34,8 +48,3 @@ receipt-scanner/
 2. The image is preprocessed (grayscale, thresholding) using OpenCV.
 3. Tesseract OCR extracts the text from the receipt.
 4. The raw text is sent to GPT-4 to be structured as JSON data.
-5. (Planned) The structured data will be stored in a database for easy tracking.
-
-## 🔐 Environment Variables
-
-Create a `.env` file to store your OpenAI API key:
