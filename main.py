@@ -1,6 +1,7 @@
 from utils.gdrive_sync import authenticate_drive, download_files_from_folder
 from utils.image_processor import preprocess_image
 from utils.receipt_parser import extract_text, extract_structured_data
+from utils.iot_sender import send_to_iot_hub
 import os
 
 def main():
@@ -36,9 +37,18 @@ def main():
         structured_data = extract_structured_data(raw_text)
         print("Structured data:\n", structured_data)
 
-        # save structured_data`
+        #Save structured_data
         with open(f"results/{file_name.replace('.jpg', '.json')}", "w") as f:
             f.write(structured_data)
+
+        # Send the structured data to Azure IoT Central
+        if isinstance(structured_data, str): 
+            import json
+            # Clean up GPT formatting like ```json and ```
+            structured_data = structured_data.strip().strip("```json").strip("```")
+            structured_data = json.loads(structured_data)
+
+        send_to_iot_hub(structured_data)
 
 if __name__ == "__main__":
     main()

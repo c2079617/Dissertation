@@ -12,7 +12,7 @@ def extract_structured_data(raw_text):
     prompt = f"""
 You are an intelligent assistant. Structure the following receipt text into JSON format:
 {raw_text}
-Return JSON with: store name, date, list of items (name + price), and total.
+Return raw JSON with: store name, date, list of items (name + price), and total.
 """
 
     try:
