@@ -2,9 +2,13 @@ from utils.gdrive_sync import authenticate_drive, download_files_from_folder
 from utils.image_processor import preprocess_image
 from utils.receipt_parser import extract_text, extract_structured_data
 from utils.iot_sender import send_to_iot_hub
+from utils.email_fetcher import download_email_receipts
 import os
 
 def main():
+    # Check inbox and download any new email receipt images
+    download_email_receipts()
+
     # Authenticate with Google Drive and download any new receipt images
     folder_id = "1KY4B9zWYuT0jn2CXC-b2SIGpnJfaPQrR"
     service = authenticate_drive()
