@@ -19,6 +19,7 @@ The system watches a Google Drive folder for new receipt images. Once detected, 
 ## 🔧 Key Features
 
 - ✅ Sync with Google Drive folder
+- 📨 Email Integration — Automatically fetches receipt images from a Gmail inbox (supports attachments like .jpg/.png)
 - 📸 Image preprocessing (grayscale, thresholding)
 - 🔍 Text extraction via Tesseract OCR
 - 🤖 Structured data creation using OpenAI's GPT
