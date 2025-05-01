@@ -1,30 +1,25 @@
 # Dissertation
 # 🧾 AI-Powered Receipt Scanning Tool
 
-This project is a final-year Computer Science dissertation at Sheffield Hallam University. It is an AI-powered receipt scanning tool that automates expense tracking by extracting and structuring receipt data from images stored in a synced Google Drive folder.
+This project is a final-year Computer Science dissertation at Sheffield Hallam University. It is an AI-powered receipt scanning tool built in Python that automates expense tracking by extracting and structuring receipt data from images received via email and Google Drive, then uploads the data to Azure IoT Hub.
 
 ---
 
 ## 📌 Project Summary
 
-The system watches a Google Drive folder for new receipt images. Once detected, each image is:
-1. Downloaded locally
-2. Preprocessed with OpenCV
-3. Scanned using Tesseract OCR
-4. Parsed and structured with GPT-4 into JSON format
-5. Stored in a database for user-friendly tracking and reporting
+The goal of this tool is to simplify receipt tracking and expense logging. Users can send receipt images either by uploading to Google Drive or by emailing them to a dedicated inbox. The system automatically downloads the images, extracts text, parses it into structured data using GPT, and sends the information to Azure IoT Hub.
 
 ---
 
 ## 🔧 Key Features
 
-- ✅ Sync with Google Drive folder
-- 📨 Email Integration — Automatically fetches receipt images from a Gmail inbox (supports attachments like .jpg/.png)
-- 📸 Image preprocessing (grayscale, thresholding)
-- 🔍 Text extraction via Tesseract OCR
-- 🤖 Structured data creation using OpenAI's GPT
-- 💾 Temporary local storage of images
-- Integration with a web dashboard or database
+- 📨 **Email Integration** – Downloads receipt images sent to a Gmail inbox
+- ☁️ **Google Drive Sync** – Grabs new receipt images from a specified folder
+- 🔍 **OCR with Tesseract** – Extracts raw text from receipts
+- 🧠 **Data Structuring via GPT** – Converts text into structured JSON format
+- 📤 **Azure IoT Hub Integration** – Sends processed data to the cloud
+- 📝 **Local JSON Storage** – Saves structured receipts in local `.json` format
+- 🔧 **Email Reports** - Spending reports and graphs sent via email
 
 ---
 
@@ -38,14 +33,56 @@ Dissertation/
 ├── receipts/                        # Folder to store temporarily downloaded receipt images
 │   └── sample.jpg
 ├── utils/                           # Helper modules
-│   ├── image_processor.py          # OpenCV preprocessing
-│   ├── receipt_parser.py           # Tesseract OCR + GPT structuring
-│   └── gdrive_sync.py              # Google Drive sync and monitoring
+│   ├── image_processor.py           # OpenCV preprocessing
+│   ├── receipt_parser.py            # Tesseract OCR + GPT structuring
+│   └── gdrive_sync.py               # Google Drive sync and monitoring
+│   └── email_fetcher.py             # Email Input
+│   └── iot_sender.py                # Link to Azure IoT Hub
 └── README.md
+
+---
 
 ## 🚀 How It Works
 
-1. The user sends a photo of a receipt.
-2. The image is preprocessed (grayscale, thresholding) using OpenCV.
-3. Tesseract OCR extracts the text from the receipt.
-4. The raw text is sent to GPT-4 to be structured as JSON data.
+1. Checks Gmail inbox for new `.jpg/.png` receipt attachments  
+2. Syncs a specified Google Drive folder for any new receipt uploads  
+3. Preprocesses the image (grayscale, thresholding)  
+4. Uses OCR to extract raw text from the receipt  
+5. Sends the text to GPT to generate structured JSON data  
+6. Saves the JSON to the `results/` folder  
+7. Sends the data to Azure IoT Hub  
+8. Sends a summarized report with charts via email 
+
+---
+
+## 🔐 .env Configuration
+
+OPENAI_API_KEY=your_openai_key_here
+IOTHUB_CONNECTION_STRING=your_azure_iot_hub_connection_string
+EMAIL_USER=yourgmail@gmail.com
+EMAIL_PASS=your_gmail_app_password
+
+---
+
+## 📨 Email-Based Input
+
+	•	Send an email to your configured Gmail inbox
+	•	The system will download any .jpg, .jpeg, or .png attachments
+	•	Each will be processed automatically
+
+---
+
+## 🔗 Azure IoT Hub Integration
+
+The structured receipt data is sent to Azure IoT Hub where it can later be:
+	•	Streamed into Azure SQL or Cosmos DB
+	•	Visualized via Power BI
+	•	Used to trigger alerts or automation
+
+---
+
+## 📬 Author
+
+Jack Kong
+Sheffield Hallam University – BSc Computer Science
+2025 Dissertation Project
