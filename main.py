@@ -1,7 +1,7 @@
 from utils.gdrive_sync import authenticate_drive, download_files_from_folder
 from utils.image_processor import preprocess_image
 from utils.receipt_parser import extract_text, extract_structured_data
-from utils.iot_sender import send_to_iot_hub
+from utils.iot_sender import send_to_iot_hub, send_item_to_iot_hub
 from utils.email_fetcher import download_email_receipts
 import os
 from datetime import datetime
@@ -49,12 +49,28 @@ def main():
         cleaned_data = {
             "storeName": structured_data.get("storeName") or structured_data.get("store_name") or structured_data.get("store name"),
             "receiptDate": structured_data.get("date"),
-            "totalSpent": float(str(structured_data.get("total", "0")).replace("£", "").strip()) if structured_data.get("total") else 0.0,
+            "totalSpent": float(str(structured_data["total"].get("total_amount", "0")).replace("£", "").strip()) if isinstance(structured_data.get("total"), dict) else float(str(structured_data.get("total", "0")).replace("£", "").strip()),
             "itemCount": len(structured_data.get("items", [])),
             "rawJson": raw_copy
         }
 
         send_to_iot_hub(cleaned_data)  # send the final cleaned receipt to the cloud
+
+        # Now send each item from the receipt individually
+        for item in structured_data.get("items", []):
+            try:
+                clean_price = float(str(item.get("price", "0")).replace("£", "").strip())
+            except:
+                clean_price = 0.0
+
+            item_payload = {
+                "storeName": cleaned_data["storeName"],
+                "receiptDate": cleaned_data["receiptDate"],
+                "itemName": item.get("name"),
+                "price": clean_price
+         }
+
+            send_item_to_iot_hub(item_payload)  # send this item to the ReceiptItems stream
 
 if __name__ == "__main__":
     main() 

@@ -30,3 +30,19 @@ def send_to_iot_hub(data):
 
     except Exception as e:
         print(f"❌ Failed to send to IoT Hub: {e}")
+        
+
+def send_item_to_iot_hub(item_data):
+    """Send a single item from a receipt to Azure IoT Hub."""
+    if not CONNECTION_STRING:
+        print("❌ IOTHUB_CONNECTION_STRING not found in .env")
+        return
+
+    try:
+        client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+        message = Message(json.dumps(item_data))
+        print(f"📦 Sending item: {item_data}")
+        client.send_message(message)
+        client.shutdown()
+    except Exception as e:
+        print(f"❌ Failed to send item to IoT Hub: {e}")
