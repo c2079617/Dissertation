@@ -25,7 +25,7 @@ def download_files_from_folder(service, folder_id, download_path='receipts/'):
     if not os.path.exists(download_path):
         os.makedirs(download_path)
 
-    query = f"'{folder_id}' in parents and mimeType='image/jpeg'"
+    query = f"'{folder_id}' in parents and mimeType='image/jpeg' and trashed=false"
     results = service.files().list(q=query, pageSize=10, fields="files(id, name)").execute()
     files = results.get('files', [])
 
