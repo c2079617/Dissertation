@@ -19,33 +19,33 @@ def main():
         return
 
     for file_name in files:  # go through each receipt
-        print(f"\n[*] Processing: {file_name}")  # show which file we're on
+        print(f"\n📄 Processing '{file_name}'")  # show which file we're on
         image_path = os.path.join(receipt_folder, file_name)  # full path to the image
 
-        print("[*] Preprocessing image...")  # getting the image ready for OCR
-        processed_image = preprocess_image(image_path)  # use OpenCV stuff
+        processed_image = preprocess_image(image_path)  # use OpenCV to clean up image
+        raw_text = extract_text(processed_image)  # use OCR to get plain text
+        structured_data = extract_structured_data(raw_text)  # send to GPT to get structured data
 
-        print("[*] Extracting text from image...")  # now do OCR
-        raw_text = extract_text(processed_image)  # get plain text
-        print("Extracted text:\n", raw_text)  # print it out
+        print("✅ OCR and structuring completed")
 
-        print("[*] Sending to GPT for structuring...")  # ask GPT to turn the text into a JSON receipt
-        structured_data = extract_structured_data(raw_text)  # get that JSON response
-        print("Structured data:\n", structured_data)  # display it
-
+        # save GPT result as a raw .json file
         with open(f"results/{file_name.replace('.jpg', '.json')}", "w") as f:
-            f.write(structured_data)  # save what GPT gave us for later
+            f.write(structured_data)
 
-        if isinstance(structured_data, str):  # sometimes GPT returns a string
+        if isinstance(structured_data, str):  # check if GPT returned a string
             import json
-            structured_data = structured_data.strip().strip("```json").strip("```")  # clean the formatting
+            structured_data = structured_data.strip().strip("```json").strip("```")  # clean triple backticks etc.
             raw_copy = structured_data
-            structured_data = json.loads(structured_data)  # turn string into dictionary
-            structured_data["rawJson"] = json.dumps(structured_data)  # include full JSON for rawJson field
+            try:
+                structured_data = json.loads(structured_data)  # convert to dict
+            except json.JSONDecodeError as e:
+                print("❌ Could not parse structured JSON:", e)
+                continue  # skip this receipt if it fails
+            structured_data["rawJson"] = raw_copy  # store original
         else:
             raw_copy = structured_data.get("rawJson", "")
 
-        # Build a clean version of the data to match our database schema
+        # now build a version of the data that matches our schema
         cleaned_data = {
             "storeName": structured_data.get("storeName") or structured_data.get("store_name") or structured_data.get("store name"),
             "receiptDate": structured_data.get("date"),
@@ -54,9 +54,9 @@ def main():
             "rawJson": raw_copy
         }
 
-        send_to_iot_hub(cleaned_data)  # send the final cleaned receipt to the cloud
+        send_to_iot_hub(cleaned_data)  # send main receipt info
 
-        # Now send each item from the receipt individually
+        # send each item to IoT Hub separately
         for item in structured_data.get("items", []):
             try:
                 clean_price = float(str(item.get("price", "0")).replace("£", "").strip())
@@ -68,9 +68,16 @@ def main():
                 "receiptDate": cleaned_data["receiptDate"],
                 "itemName": item.get("name"),
                 "price": clean_price
-         }
+            }
 
-            send_item_to_iot_hub(item_payload)  # send this item to the ReceiptItems stream
+            send_item_to_iot_hub(item_payload)  # send this item to the item stream
+
+        # cleanup - delete the file from disk now that we're done
+        try:
+            os.remove(image_path)
+            print(f"🗑️ Deleted: {file_name}")
+        except Exception as e:
+            print(f"⚠️ Could not delete {file_name}")
 
 if __name__ == "__main__":
-    main() 
+    main()
