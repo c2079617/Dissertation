@@ -3,8 +3,8 @@ from utils.image_processor import preprocess_image
 from utils.receipt_parser import extract_text, extract_structured_data
 from utils.iot_sender import send_to_iot_hub, send_item_to_iot_hub
 from utils.email_fetcher import download_email_receipts
+from utils.email_reporter import send_email_report
 import os
-from datetime import datetime
 
 def main():
     folder_id = "1KY4B9zWYuT0jn2CXC-b2SIGpnJfaPQrR"  # ID of the Google Drive folder
@@ -56,6 +56,14 @@ def main():
 
         send_to_iot_hub(cleaned_data)  # send main receipt info
 
+        send_email_report({
+                "storeName": cleaned_data["storeName"],
+                "receiptDate": cleaned_data["receiptDate"],
+                "totalSpent": cleaned_data["totalSpent"],
+                "itemCount": cleaned_data["itemCount"],
+                "items": structured_data.get("items", [])
+            })
+
         # send each item to IoT Hub separately
         for item in structured_data.get("items", []):
             try:
@@ -78,6 +86,7 @@ def main():
             print(f"🗑️ Deleted: {file_name}")
         except Exception as e:
             print(f"⚠️ Could not delete {file_name}")
+        
 
 if __name__ == "__main__":
     main()
