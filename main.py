@@ -4,6 +4,7 @@ from utils.receipt_parser import extract_text, extract_structured_data
 from utils.iot_sender import send_to_iot_hub, send_item_to_iot_hub
 from utils.email_fetcher import download_email_receipts
 from utils.email_reporter import send_email_report
+from utils.db_exporter import export_sql_to_csv
 import os
 
 def main():
@@ -56,12 +57,16 @@ def main():
 
         send_to_iot_hub(cleaned_data)  # send main receipt info
 
+        # Export the latest SQL data to CSV
+        export_sql_to_csv()
+        
         send_email_report({
                 "storeName": cleaned_data["storeName"],
                 "receiptDate": cleaned_data["receiptDate"],
                 "totalSpent": cleaned_data["totalSpent"],
                 "itemCount": cleaned_data["itemCount"],
-                "items": structured_data.get("items", [])
+                "items": structured_data.get("items", []),
+                "imagePath": image_path
             })
 
         # send each item to IoT Hub separately
