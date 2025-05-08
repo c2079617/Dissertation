@@ -5,16 +5,12 @@ from imap_tools import MailMessageFlags, MailBox, AND
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from main import main 
 
-def has_new_files(receipt_folder="receipts"):
-    # Check if any .jpg files exist that haven't been processed
-    return any(f.endswith('.jpg') for f in os.listdir(receipt_folder))
-
 def has_unseen_emails():
     from_email = os.getenv("EMAIL_USER")
     password = os.getenv("EMAIL_PASS")
     with MailBox('imap.gmail.com').login(from_email, password) as mailbox:
         mailbox.folder.set('INBOX')
-        unseen = list(mailbox.fetch(criteria=AND(seen=False), limit=1))
+        unseen = list(mailbox.fetch(criteria=AND(seen=False), limit=1, mark_seen=False))
         return len(unseen) > 0
 
 def run_autonomously(poll_interval=2):  # check every 60 seconds
