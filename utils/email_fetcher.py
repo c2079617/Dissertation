@@ -1,7 +1,7 @@
 from imap_tools import MailBox, AND, MailMessageFlags
 import os
 
-def download_email_receipts(download_folder="receipts/"):
+def download_email_receipts(download_folder="receipts"):
     from_email = os.getenv("EMAIL_USER")
     password = os.getenv("EMAIL_PASS")
 

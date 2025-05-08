@@ -13,10 +13,11 @@ def has_unseen_emails():
     from_email = os.getenv("EMAIL_USER")
     password = os.getenv("EMAIL_PASS")
     with MailBox('imap.gmail.com').login(from_email, password) as mailbox:
-        unseen_messages = list(mailbox.fetch(criteria=AND(seen=False), limit=1))
-        return len(unseen_messages) > 0
+        mailbox.folder.set('INBOX')
+        unseen = list(mailbox.fetch(criteria=AND(seen=False), limit=1))
+        return len(unseen) > 0
 
-def run_autonomously(poll_interval=60):  # check every 60 seconds
+def run_autonomously(poll_interval=2):  # check every 60 seconds
     print("[*] Autonomous runner started...")
 
     while True:
