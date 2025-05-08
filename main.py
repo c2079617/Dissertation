@@ -1,4 +1,4 @@
-from utils.gdrive_sync import authenticate_drive, download_files_from_folder
+from utils.gdrive_sync import authenticate_drive, download_files_from_folder, delete_file
 from utils.image_processor import preprocess_image
 from utils.receipt_parser import extract_text, extract_structured_data
 from utils.iot_sender import send_to_iot_hub, send_item_to_iot_hub
@@ -8,7 +8,7 @@ from utils.db_exporter import export_sql_to_csv
 import os
 
 def main():
-    
+
     download_email_receipts()  # grab any email attachments (e.g., .jpg receipts)
 
     folder_id = "1KY4B9zWYuT0jn2CXC-b2SIGpnJfaPQrR"  # ID of the Google Drive folder
@@ -94,6 +94,8 @@ def main():
             print(f"🗑️ Deleted: {file_name}")
         except Exception as e:
             print(f"⚠️ Could not delete {file_name}")
+        
+        delete_file(service, folder_id)
         
 
 if __name__ == "__main__":
