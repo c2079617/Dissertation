@@ -8,6 +8,9 @@ from utils.db_exporter import export_sql_to_csv
 import os
 
 def main():
+    
+    download_email_receipts()  # grab any email attachments (e.g., .jpg receipts)
+
     folder_id = "1KY4B9zWYuT0jn2CXC-b2SIGpnJfaPQrR"  # ID of the Google Drive folder
     service = authenticate_drive()  # login to Google Drive
     download_files_from_folder(service, folder_id)  # grab any .jpgs from the folder

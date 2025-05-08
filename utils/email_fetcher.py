@@ -1,4 +1,4 @@
-from imap_tools import MailBox, AND
+from imap_tools import MailBox, AND, MailMessageFlags
 import os
 
 def download_email_receipts(download_folder="receipts/"):
@@ -20,4 +20,4 @@ def download_email_receipts(download_folder="receipts/"):
                         f.write(att.payload)
 
             # Mark email as seen manually after processing
-            mailbox.flag(msg.uid, MailBox.flags.SEEN, True)
+            mailbox.flag(msg.uid, MailMessageFlags.SEEN, True)
