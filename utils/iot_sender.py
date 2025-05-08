@@ -3,10 +3,9 @@ import json
 from dotenv import load_dotenv
 from azure.iot.device import IoTHubDeviceClient, Message
 
-# Load .env file
 load_dotenv()
 
-# Get IoT Hub connection string
+# IoT Hub connection string
 CONNECTION_STRING = os.getenv("IOTHUB_CONNECTION_STRING")
 
 def send_to_iot_hub(data):

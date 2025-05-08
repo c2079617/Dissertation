@@ -27,7 +27,7 @@ def download_files_from_folder(service, folder_id, download_path='receipts/'):
     query = f"'{folder_id}' in parents and mimeType='image/jpeg' and trashed=false"
     results = service.files().list(q=query, pageSize=10, fields="files(id, name)").execute()
     files = results.get('files', [])
-    downloaded_file_ids = []  # create a list to store file IDs for later deletion
+    downloaded_file_ids = []  # list to store file IDs for later deletion
 
     for file in files:
         file_id = file['id']
@@ -46,7 +46,7 @@ def download_files_from_folder(service, folder_id, download_path='receipts/'):
 def delete_file(service, file_id):
     """Delete a file from Google Drive using its file ID"""
     try:
-        service.files().delete(fileId=file_id).execute()  # actually remove the file from Drive
-        print(f"🗑️ Deleted file from Drive: {file_id}")  # confirm deletion
+        service.files().delete(fileId=file_id).execute()  # remove the file from Drive
+        print(f"🗑️ Deleted file from Drive: {file_id}")  # confirm 
     except Exception as e:
-        print(f"❌ Failed to delete file {file_id}: {e}")  # something went wrong, let us know
+        print(f"❌ Failed to delete file {file_id}: {e}") 

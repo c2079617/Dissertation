@@ -19,5 +19,5 @@ def download_email_receipts(download_folder="receipts/"):
                     with open(file_path, 'wb') as f:
                         f.write(att.payload)
 
-            # Mark email as seen manually after processing
+            # Mark email as seen after processing
             mailbox.flag(msg.uid, MailMessageFlags.SEEN, True)

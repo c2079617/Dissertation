@@ -15,12 +15,9 @@ def run_autonomously(poll_interval=60):  # check every 60 seconds
     while True:
         print("[*] Checking for new receipts...")
 
-        download_email_receipts()  # fetch unread emails
-
         if has_new_files():
             print("[*] New receipt found! Running main...")
             main()
-            cleanup_drive_folder(folder_id="1KY4B9zWYuT0jn2CXC-b2SIGpnJfaPQrR")
         else:
             print("[*] No new receipts. Sleeping...\n")
 

@@ -86,9 +86,9 @@ def main():
                 "price": clean_price
             }
 
-            send_item_to_iot_hub(item_payload)  # send this item to the item stream
+            send_item_to_iot_hub(item_payload)  # send 
 
-        # cleanup - delete the file from disk now that we're done
+        # cleanup - delete the file from disk 
         try:
             os.remove(image_path)
             print(f"🗑️ Deleted: {file_name}")

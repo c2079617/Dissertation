@@ -12,7 +12,7 @@ def export_sql_to_csv(filename="receipt_data.csv"):
         "TrustServerCertificate=no;"
         "Connection Timeout=30;"
   )
-    query = "SELECT * FROM Receipts;"  # change to dbo.ReceiptItems if needed
+    query = "SELECT * FROM Receipts;" 
     df = pd.read_sql(query, conn)
     df.to_csv(filename, index=False)
     conn.close()

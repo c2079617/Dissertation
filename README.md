@@ -1,13 +1,16 @@
-# Dissertation
 # 🧾 AI-Powered Receipt Scanning Tool
 
 This project is a final-year Computer Science dissertation at Sheffield Hallam University. It is an AI-powered receipt scanning tool built in Python that automates expense tracking by extracting and structuring receipt data from images received via email and Google Drive, then uploads the data to Azure IoT Hub.
+
+Additionally, data is stored in an Azure SQL database and exported to CSV for further analysis.
 
 ---
 
 ## 📌 Project Summary
 
 The goal of this tool is to simplify receipt tracking and expense logging. Users can send receipt images either by uploading to Google Drive or by emailing them to a dedicated inbox. The system automatically downloads the images, extracts text, parses it into structured data using GPT, and sends the information to Azure IoT Hub.
+
+Additionally, data is stored in an Azure SQL database and exported to CSV for further analysis.
 
 ---
 
@@ -20,6 +23,7 @@ The goal of this tool is to simplify receipt tracking and expense logging. Users
 - 📤 **Azure IoT Hub Integration** – Sends processed data to the cloud
 - 📝 **Local JSON Storage** – Saves structured receipts in local `.json` format
 - 🔧 **Email Reports** - Spending reports and graphs sent via email
+- 📊 **CSV Export** – Automatically exports all data to a CSV file from Azure SQL
 
 ---
 
@@ -35,9 +39,12 @@ Dissertation/
 ├── utils/                           # Helper modules
 │   ├── image_processor.py           # OpenCV preprocessing
 │   ├── receipt_parser.py            # Tesseract OCR + GPT structuring
-│   └── gdrive_sync.py               # Google Drive sync and monitoring
-│   └── email_fetcher.py             # Email Input
-│   └── iot_sender.py                # Link to Azure IoT Hub
+│   ├── gdrive_sync.py               # Google Drive sync and monitoring
+│   ├── email_fetcher.py             # Email Input
+│   ├── iot_sender.py                # Link to Azure IoT Hub
+│   ├── email_reporter.py            # Email Reports
+│   └── db_exporter.py               # Export data to CSV from Azure SQL
+│   └── autonomous_runner.py         # Runs Application Autonomusley
 └── README.md
 
 ---
@@ -51,7 +58,8 @@ Dissertation/
 5. Sends the text to GPT to generate structured JSON data  
 6. Saves the JSON to the `results/` folder  
 7. Sends the data to Azure IoT Hub  
-8. Sends a summarized report with charts via email 
+8. Sends a summarized report with charts via email  
+9. Exports all structured data to a CSV file from the Azure SQL database
 
 ---
 
@@ -59,8 +67,8 @@ Dissertation/
 
 OPENAI_API_KEY=your_openai_key_here
 IOTHUB_CONNECTION_STRING=your_azure_iot_hub_connection_string
-EMAIL_USER=yourgmail@gmail.com
-EMAIL_PASS=your_gmail_app_password
+EMAIL_USER=your_receiving_gmail_address
+EMAIL_PASS=your_gmail_app_password (generated via Google App Passwords)
 
 ---
 
