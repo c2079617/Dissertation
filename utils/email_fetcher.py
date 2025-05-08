@@ -9,7 +9,7 @@ def download_email_receipts(download_folder="receipts/"):
         os.makedirs(download_folder)
 
     with MailBox('imap.gmail.com').login(from_email, password) as mailbox:
-        print("📬 Checking inbox for receipt images...")
+        print("📬 Checking Email for receipt images...")
         messages = mailbox.fetch(criteria=AND(seen=False))
         for msg in messages:
             downloaded = False

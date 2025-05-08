@@ -13,7 +13,7 @@ def has_unseen_emails():
         unseen = list(mailbox.fetch(criteria=AND(seen=False), limit=1, mark_seen=False))
         return len(unseen) > 0
 
-def run_autonomously(poll_interval=2):  # check every 60 seconds
+def run_autonomously(poll_interval=2):  # check every "_" seconds
     print("[*] Autonomous runner started...")
 
     while True:

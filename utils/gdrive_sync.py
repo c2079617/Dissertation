@@ -20,14 +20,15 @@ def authenticate_drive():
     return build('drive', 'v3', credentials=creds)
 
 def download_files_from_folder(service, folder_id, download_path='receipts/'):
-    """Download all .jpg images from the specified Google Drive folder."""
+    """Download all .jpg images from the specified Google Drive folder and delete them after download."""
+    print("📬 Checking Google Drive for receipt images...")
+
     if not os.path.exists(download_path):
         os.makedirs(download_path)
 
     query = f"'{folder_id}' in parents and mimeType='image/jpeg' and trashed=false"
     results = service.files().list(q=query, pageSize=10, fields="files(id, name)").execute()
     files = results.get('files', [])
-    downloaded_file_ids = []  # list to store file IDs for later deletion
 
     for file in files:
         file_id = file['id']
@@ -39,14 +40,10 @@ def download_files_from_folder(service, folder_id, download_path='receipts/'):
         while not done:
             status, done = downloader.next_chunk()
         print(f"Downloaded: {file_name}")
-        downloaded_file_ids.append(file_id)  # store each file's ID after downloading
 
-    return downloaded_file_ids  # return the list of downloaded file IDs so we can delete them later
-
-def delete_file(service, file_id):
-    """Delete a file from Google Drive using its file ID"""
-    try:
-        service.files().delete(fileId=file_id).execute()  # remove the file from Drive
-        print(f"🗑️ Deleted file from Drive: {file_id}")  # confirm 
-    except Exception as e:
-        print(f"❌ Failed to delete file {file_id}: {e}") 
+        # Delete the file from Drive after download
+        try:
+            service.files().delete(fileId=file_id).execute()
+            print(f"🗑️ Deleted file from Drive: {file_name}")
+        except Exception as e:
+            print(f"❌ Failed to delete file {file_name}: {e}")

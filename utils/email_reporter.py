@@ -54,7 +54,7 @@ def generate_chart_image(items):
 def send_email_report(receipt_data, image_path=None):
     sender = os.getenv("EMAIL_USER")        
     password = os.getenv("EMAIL_PASS")      
-    recipient = "jackkongjack@gmail.com"
+    recipient = "c2079617@hallam.shu.ac.uk" # recipiant email
 
     msg = MIMEMultipart("related")
     msg["Subject"] = f"Receipt Summary - {receipt_data['storeName']}"
